@@ -24,18 +24,10 @@ def convert_euler_to_quaternion(pitch, yaw, roll):
     return qw, qx, qy, qz
 
 def multiply_quaternions(qw1, qx1, qy1, qz1, qw2, qx2, qy2, qz2):
-    a1 = qw1
-    b1 = qx1
-    c1 = qy1
-    d1 = qz1
-    a2 = qw2
-    b2 = qx2
-    c2 = qy2
-    d2 = qz2
-    w = a1 * a2 - b1 * b2 - c1 * c2 - d1 * d2
-    x = a1 * b2 + b1 * a2 + c1 * d2 - d1 * c2
-    y = a1 * c2 - b1 * d2 + c1 * a2 + d1 * b2
-    z = a1 * d2 + b1 * c2 - c1 * b2 + d1 * a2
+    w = qw1 * qw2 - qx1 * qx2 - qy1 * qy2 - qz1 * qz2
+    x = qw1 * qx2 + qx1 * qw2 + qy1 * qz2 - qz1 * qy2
+    y = qw1 * qy2 - qx1 * qz2 + qy1 * qw2 + qz1 * qx2
+    z = qw1 * qz2 + qx1 * qy2 - qy1 * qx2 + qz1 * qw2
     return w, x, y, z
 
 def rotate_vector_by_quaternion(vx, vy, vz, qw, qx, qy, qz):
