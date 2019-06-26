@@ -1,5 +1,5 @@
 library(tidyverse)
-source("unity_rotation.R")
+source("unity-rotation.R")
 
 test_case <- read_csv("../test_case.txt", col_names = F) %>%
   rename(quaternion_w = X1,
