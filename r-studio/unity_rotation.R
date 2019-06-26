@@ -21,10 +21,10 @@ convert_euler_to_quaternion <- function(pitch, yaw, roll) {
   qy = sy * cr * cp - cy * sr * sp
   return(matrix(c(qw, qx, qy, qz), ncol = 4) %>%
            as_tibble(.name_repair = "unique") %>%
-           rename(Quaternion.W = names(.)[1],
-                  Quaternion.X = names(.)[2],
-                  Quaternion.Y = names(.)[3],
-                  Quaternion.Z = names(.)[4]))
+           rename(quaternion_w = names(.)[1],
+                  quaternion_x = names(.)[2],
+                  quaternion_y = names(.)[3],
+                  quaternion_z = names(.)[4]))
 }
 
 multiply_quaternions <- function(qw1, qx1, qy1, qz1, qw2, qx2, qy2, qz2) {
@@ -32,36 +32,35 @@ multiply_quaternions <- function(qw1, qx1, qy1, qz1, qw2, qx2, qy2, qz2) {
   x = qw1 * qx2 + qx1 * qw2 + qy1 * qz2 - qz1 * qy2
   y = qw1 * qy2 - qx1 * qz2 + qy1 * qw2 + qz1 * qx2
   z = qw1 * qz2 + qx1 * qy2 - qy1 * qx2 + qz1 * qw2
-  #return(c(w, x, y, z))
   return(matrix(c(w, x, y, z), ncol = 4) %>%
            as_tibble(.name_repair = "unique") %>%
-           rename(Quaternion.W = names(.)[1],
-                  Quaternion.X = names(.)[2],
-                  Quaternion.Y = names(.)[3],
-                  Quaternion.Z = names(.)[4]))
+           rename(quaternion_w = names(.)[1],
+                  quaternion_x = names(.)[2],
+                  quaternion_y = names(.)[3],
+                  quaternion_z = names(.)[4]))
 }
 
 rotate_vector_by_quaternion <- function(vx, vy, vz, qw, qx, qy, qz) {
   qq = multiply_quaternions(qw, qx, qy, qz, 0, vx, vy, vz)
-  return(multiply_quaternions(qq$Quaternion.W,
-                              qq$Quaternion.X,
-                              qq$Quaternion.Y,
-                              qq$Quaternion.Z,
+  return(multiply_quaternions(qq$quaternion_w,
+                              qq$quaternion_x,
+                              qq$quaternion_y,
+                              qq$quaternion_z,
                               qw, -qx, -qy, -qz))
 }
 
 convert_quaternion_to_look_at <- function(qw, qx, qy, qz) {
   return(rotate_vector_by_quaternion(0, 0, 1, qw, qx, qy, qz) %>%
-           select(-Quaternion.W) %>%
-           rename(Look.At.X = Quaternion.X,
-                  Look.At.Y = Quaternion.Y,
-                  Look.At.Z = Quaternion.Z))
+           select(-quaternion_w) %>%
+           rename(look_at_x = quaternion_x,
+                  look_at_y = quaternion_y,
+                  look_at_z = quaternion_z))
 }
 
 convert_quaternion_to_look_up <- function(qw, qx, qy, qz) {
   return(rotate_vector_by_quaternion(0, 1, 0, qw, qx, qy, qz) %>%
-           select(-Quaternion.W) %>%
-           rename(Look.Up.X = Quaternion.X,
-                  Look.Up.Y = Quaternion.Y,
-                  Look.Up.Z = Quaternion.Z))
+           select(-quaternion_w) %>%
+           rename(look_up_x = quaternion_x,
+                  look_up_y = quaternion_y,
+                  look_up_z = quaternion_z))
 }
