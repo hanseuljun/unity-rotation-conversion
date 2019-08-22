@@ -19,12 +19,11 @@ convert_euler_to_quaternion <- function(pitch, yaw, roll) {
   qz = cy * sr * cp - sy * cr * sp
   qx = cy * cr * sp + sy * sr * cp
   qy = sy * cr * cp - cy * sr * sp
-  return(matrix(c(qw, qx, qy, qz), ncol = 4) %>%
-           as_tibble(.name_repair = "unique") %>%
-           rename(quaternion_w = names(.)[1],
-                  quaternion_x = names(.)[2],
-                  quaternion_y = names(.)[3],
-                  quaternion_z = names(.)[4]))
+  
+  return(tibble(quaternion_w = qw,
+                quaternion_x = qx,
+                quaternion_y = qy,
+                quaternion_z = qz))
 }
 
 multiply_quaternions <- function(qw1, qx1, qy1, qz1, qw2, qx2, qy2, qz2) {
@@ -32,12 +31,11 @@ multiply_quaternions <- function(qw1, qx1, qy1, qz1, qw2, qx2, qy2, qz2) {
   x = qw1 * qx2 + qx1 * qw2 + qy1 * qz2 - qz1 * qy2
   y = qw1 * qy2 - qx1 * qz2 + qy1 * qw2 + qz1 * qx2
   z = qw1 * qz2 + qx1 * qy2 - qy1 * qx2 + qz1 * qw2
-  return(matrix(c(w, x, y, z), ncol = 4) %>%
-           as_tibble(.name_repair = "unique") %>%
-           rename(quaternion_w = names(.)[1],
-                  quaternion_x = names(.)[2],
-                  quaternion_y = names(.)[3],
-                  quaternion_z = names(.)[4]))
+  
+  return(tibble(quaternion_w = w,
+                quaternion_x = x,
+                quaternion_y = y,
+                quaternion_z = z))
 }
 
 rotate_vector_by_quaternion <- function(vx, vy, vz, qw, qx, qy, qz) {
